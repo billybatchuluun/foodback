@@ -1,26 +1,30 @@
 import User from "../models/user";
+
 import { Request, Response } from "express";
-// import bcrypt from "bcrypt";
+
 import bcrypt from "bcrypt";
 import { request } from "http";
 
 export const signUp = async (req: Request, res: Response) => {
-  const { name, email, password, address, role } = req.body;
-
   try {
+    const { name, email, password } = req.body;
+    const emailMatchUser = await User.findOne({ email: email });
+    if (emailMatchUser) {
+      return res.status(403).json({ msg: "User already exist" });
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const createUser = await User.create({
-      name,
-      email,
+    const user = await User.create({
+      name: name,
+      email: email,
       password: hashedPassword,
-      address,
-      role,
+      phoneNumber: 99999990,
+      role: "User",
+      avatarImg: "",
     });
-    res
-      .status(201)
-      .json({ message: `${createUser.email}user create succesfull` });
+    console.log(user);
+    return res.status(201).json({ message: "Successfully created" });
   } catch (error) {
-    console.error(error);
-    res.status(400).json({ message: "User creation failed" });
+    console.error("error in createUser", error);
+    return res.status(400).json({ message: "Failed to create user" });
   }
 };

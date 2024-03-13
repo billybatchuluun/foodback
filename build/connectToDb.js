@@ -20,6 +20,7 @@ const mongoUri = process.env.MONGODB_URI;
 const connectToDb = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield mongoose_1.default.connect(mongoUri);
+        console.log("successfully connect to mongoDB");
     }
     catch (error) {
         console.error(error);
