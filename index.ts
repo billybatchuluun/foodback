@@ -5,6 +5,8 @@ import { connectToDb } from "./connectToDb";
 import router from "./routes/authRoutes";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRoutes";
+import { checkUser } from "./controller/authController";
+import { Request, Response } from "express";
 // import {verifyToken} from "./middleware/verify";
 
 const app = express();
@@ -21,3 +23,8 @@ app.use(authRouter);
 app.listen(PORT, () => {
   console.log("Application running at http://localhost:" + PORT);
 });
+
+app.post("/login", (req: Request, res: Response) => {
+  checkUser(req, res);
+});
+module.exports = app;

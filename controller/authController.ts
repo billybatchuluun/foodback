@@ -28,3 +28,21 @@ export const signUp = async (req: Request, res: Response) => {
     return res.status(400).json({ message: "Failed to create user" });
   }
 };
+
+export const checkUser = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  try {
+    const user: any = await User.findOne({ email: email });
+    if (!user) return res.status(404).json({ message: "User not found" });
+    const result = await bcrypt.compare(password, user.password);
+    if (!result) {
+      return res.status(403).json({ message: "bad password" });
+    }
+
+    return res
+      .status(200)
+      .json({ message: "succesfully logged in good luck!" });
+  } catch (error) {
+    console.log("error in createUser", error);
+  }
+};
