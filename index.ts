@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routes/authRoutes";
 import { checkUser } from "./controller/authController";
 import { Request, Response } from "express";
+import Food from "./models/foods";
 // import {verifyToken} from "./middleware/verify";
 
 const app = express();
@@ -22,6 +23,16 @@ app.use(authRouter);
 
 app.listen(PORT, () => {
   console.log("Application running at http://localhost:" + PORT);
+});
+
+app.get("/getFoods", async (req: Request, res: Response) => {
+  try {
+    const foods = await Food.find({});
+    console.log(foods);
+    return res.status(200).send(foods);
+  } catch (error) {
+    console.error("error in getFoods", error);
+  }
 });
 
 app.post("/login", (req: Request, res: Response) => {
